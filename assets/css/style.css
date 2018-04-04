@@ -1,0 +1,38 @@
+section  {
+    background-color: #f1f1f1;
+}
+
+#theQuiz {
+    background-color: white;
+}
+
+/* Set gray background color and 100% height */
+.sidenav {
+    padding-top: 20px;
+}
+
+/* Set black background color, white text and some padding */
+header, footer {
+    background-color: #555;
+    color: white;
+    padding: 15px;
+}
+
+#pictureHint, #question, #answers {
+    display:inline-block;
+}
+
+#pictureHint {
+    width: 350px;
+    border-radius: 5px;
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 768px) {
+    .sidenav {
+        padding: 15px;
+    }
+    #wrestlingLinks {
+        display:none;
+    }
+}
