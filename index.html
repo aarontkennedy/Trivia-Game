@@ -47,25 +47,44 @@
                     <a href="https://www.njpw1972.com">NJPW</a>
                 </p>
             </div>
-            <div id="theQuiz" class="col-12 col-md-8 text-left">
+            <div id="theQuiz" class="col-12 col-md-8 text-left mt-3">
                 <h1>Did You Know?</h1>
                 <p>Less than 1 in 10 people can name all of these professional wrestlers! Can you name them all?</p>
                 <p>And just so you can't cheat, this quiz is timed!</p>
                 <hr>
-                <h3>The Quiz -
-                    <span id="numCorrect">1</span>/
-                    <span id="totalQuestions">10</span>
-                </h3>
-                <img id="pictureHint" src="">
-                <div id="question" class="ml-3 mt-3">
-                    <h4></h4>
-                    <ul id="answers">
-                        <li id="answer1"></li>
-                        <li id="answer2"></li>
-                        <li id="answer3"></li>
-                        <li id="answer4"></li>
-                    </ul>
+                
+
+                <div class="container mt-3">
+                    <div class="row">
+                        <div class="col">
+                            <h3>The Quiz -
+                                <span id="numCorrect">1</span>/
+                                <span id="totalQuestions">10</span>
+                            </h3>
+                        </div>
+                        <div class="col text-right">
+                                <h4><span id="secondsLeft">1</span> Seconds</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-md-6 ">
+                            <img id="pictureHint" class="mb-3" src="">
+                        </div>
+                        <div class="col-6 col-md-6 ">
+                            <div id="question" class="ml-3">
+                                <h4></h4>
+                                <ul id="answers">
+                                    <li id="answer1"></li>
+                                    <li id="answer2"></li>
+                                    <li id="answer3"></li>
+                                    <li id="answer4"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
             <div class="col-12 col-md-2 sidenav">
                 <div class="well">
@@ -99,6 +118,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
+    <script src="assets/javascript/app.js"></script>
 
 </body>
 

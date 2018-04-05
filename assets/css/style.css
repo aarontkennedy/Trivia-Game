@@ -1,5 +1,15 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
 section  {
     background-color: #f1f1f1;
+    flex: 1 0 auto;
 }
 
 #theQuiz {
@@ -13,6 +23,7 @@ section  {
 
 /* Set black background color, white text and some padding */
 header, footer {
+    flex-shrink: 0;
     background-color: #555;
     color: white;
     padding: 15px;
@@ -22,9 +33,25 @@ header, footer {
     display:inline-block;
 }
 
+#answers {
+    padding:0;
+}
+
+#answers li {
+list-style-type: none;
+font-size: 1.25em;
+padding:.25em;
+margin:.25em;
+} 
+
+#answers li:hover {
+    background-color: rgba(136, 255, 86, 0.975);
+}
+
 #pictureHint {
     width: 350px;
     border-radius: 5px;
+    max-width:100%;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
