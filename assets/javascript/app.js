@@ -40,7 +40,7 @@ $(document).ready(function () {
 
 
     // an array to hold all possible questions
-    var questionArray = [];
+    let questionArray = [];
 
     // initialization of the question array with questions
     questionArray.push(
@@ -124,11 +124,11 @@ $(document).ready(function () {
     function shuffleArray(array) {
         // we are going to run through the array, starting at the lest element,
         // decrementing each iteration
-        for (var i = array.length - 1; i > 0; i--) {
+        for (let i = array.length - 1; i > 0; i--) {
             // this line gets a random number between 0 and the current i value
-            var j = Math.floor(Math.random() * (i + 1));
+            let j = Math.floor(Math.random() * (i + 1));
             // save the element value at the ith position
-            var temp = array[i];
+            let temp = array[i];
             // swap it with the jth position
             array[i] = array[j];
             array[j] = temp;
@@ -154,7 +154,7 @@ $(document).ready(function () {
     GameScore.prototype.incrementWrong = function () {
         return this.numWrong++;
     };
-    GameScore.prototype.numNotAnswered = function () {
+    GameScore.prototype.incrementNotAnswered = function () {
         return this.numNotAnswered++;
     };
     GameScore.prototype.numQuestions = function () {
@@ -166,12 +166,54 @@ $(document).ready(function () {
         $("#totalQuestions").text(this.numQuestions());
     };
 
-    var score = new GameScore;
+    let score = new GameScore;
+
+
+    function GameTimer() {
+        this.reset();
+    }
+    GameTimer.prototype.reset = function () {
+        this.seconds = 10;
+        this.currentLeft = this.seconds ;
+        this.interval = null;
+        this.timeout = null;
+        return this;
+    }
+    GameTimer.prototype.print = function () {
+        $("#secondsLeft").text(this.currentLeft);
+        return this;
+    }
+    GameTimer.prototype.decrement = function () {
+        this.currentLeft--;
+        return this;
+    }
+    GameTimer.prototype.startInterval = function (callback) {
+        this.reset();
+        let self = this;
+
+        this.timeout = setTimeout(function () {
+            clearInterval(self.interval);
+            callback();
+        }, this.seconds*1000 + 1100);
+
+        this.interval = setInterval(function () {
+            self.print().decrement();
+        }, 1000);
+    }
+    GameTimer.prototype.stopInterval = function () {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        if (this.timeout) {
+            clearInterval(this.timeout);
+        }
+    }
+    let thirtySecondTime = new GameTimer();
 
 
 
     // start button callback function
-    function startButtonCallback () {
+    function startButtonCallback() {
         $("#startButton").hide().off();
         $("#theQuiz").show();
         score.reset().updateScore();
@@ -191,9 +233,9 @@ $(document).ready(function () {
     state1StartGame();
 
     // State 2: Display a question
-    function goToState2DisplayQuestion () {
+    function goToState2DisplayQuestion() {
         // what number question are we?
-        var numOfCurrentQuestion = score.numQuestions();
+        let numOfCurrentQuestion = score.numQuestions();
 
         if (numOfCurrentQuestion >= 10) {
             return goToState3EndGame();
@@ -203,9 +245,10 @@ $(document).ready(function () {
 
         // listen to the answer list li's to see if they are clicked
         $("#answers li").click(function (event) {
+            thirtySecondTime.stopInterval();
             $("#answers li").off();
             console.log($(this).text());
-            var result = questionArray[numOfCurrentQuestion].isAnswerCorrect($(this).text());
+            let result = questionArray[numOfCurrentQuestion].isAnswerCorrect($(this).text());
             if (result) {
                 score.incrementCorrect();
             }
@@ -215,16 +258,24 @@ $(document).ready(function () {
             score.updateScore();
             goToState2DisplayQuestion();
         });
+
+        // this is the timer
+        thirtySecondTime.startInterval(function () {
+            $("#answers li").off();
+            score.incrementNotAnswered();
+            score.updateScore();
+            goToState2DisplayQuestion();
+        });
     }
 
     // State 3: Display results
-    function goToState3EndGame () {
-        $("#answer1").text("Correct Answers: "+score.numCorrect);
-        $("#answer2").text("Incorrect Answers: "+score.numWrong);
-        $("#answer3").text("Unanswered: "+score.numWrong);
-        var percent = Math.floor(score.numCorrect*100/score.numQuestions());
-        $("#answer4").text("Percent Correct: "+ percent +"%");
-        
+    function goToState3EndGame() {
+        $("#answer1").text("Correct: " + score.numCorrect);
+        $("#answer2").text("Incorrect: " + score.numWrong);
+        $("#answer3").text("Unanswered: " + score.numNotAnswered);
+        let percent = Math.floor(score.numCorrect * 100 / score.numQuestions());
+        $("#answer4").text("Percent Correct: " + percent + "%");
+
         if (percent > 90) {
             $("#pictureHint").attr("src", "assets/images/weSaluteYou.jpg");
             $("#question h4").text("Fantastic Job!");
