@@ -169,11 +169,11 @@ $(document).ready(function () {
     let score = new GameScore;
 
 
-    function GameTimer() {
+    function GameTimer(seconds) {
+        this.seconds = seconds;
         this.reset();
     }
     GameTimer.prototype.reset = function () {
-        this.seconds = 10;
         this.currentLeft = this.seconds ;
         this.interval = null;
         this.timeout = null;
@@ -208,7 +208,8 @@ $(document).ready(function () {
             clearInterval(this.timeout);
         }
     }
-    let thirtySecondTime = new GameTimer();
+    let tenSecondTime = new GameTimer(15);
+    let fiveSecondTime = new GameTimer(5);
 
 
 
@@ -238,14 +239,14 @@ $(document).ready(function () {
         let numOfCurrentQuestion = score.numQuestions();
 
         if (numOfCurrentQuestion >= 10) {
-            return goToState3EndGame();
+            return goToState4EndGame();
         }
 
         questionArray[numOfCurrentQuestion].print();
 
         // listen to the answer list li's to see if they are clicked
         $("#answers li").click(function (event) {
-            thirtySecondTime.stopInterval();
+            tenSecondTime.stopInterval();
             $("#answers li").off();
             console.log($(this).text());
             let result = questionArray[numOfCurrentQuestion].isAnswerCorrect($(this).text());
@@ -260,7 +261,7 @@ $(document).ready(function () {
         });
 
         // this is the timer
-        thirtySecondTime.startInterval(function () {
+        tenSecondTime.startInterval(function () {
             $("#answers li").off();
             score.incrementNotAnswered();
             score.updateScore();
@@ -268,8 +269,13 @@ $(document).ready(function () {
         });
     }
 
-    // State 3: Display results
-    function goToState3EndGame() {
+    // State 3: Show the correct answer
+    function goToState3DisplayAnswer () {
+
+    }
+
+    // State 4: Display results
+    function goToState4EndGame() {
         $("#answer1").text("Correct: " + score.numCorrect);
         $("#answer2").text("Incorrect: " + score.numWrong);
         $("#answer3").text("Unanswered: " + score.numNotAnswered);
