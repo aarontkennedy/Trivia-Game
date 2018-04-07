@@ -37,6 +37,12 @@ $(document).ready(function () {
         }
         return false;
     }
+    Question.prototype.printCorrectAnswer = function () {
+        $("#answer1").text(this.correct);
+        $("#answer2").text("");
+        $("#answer3").text("");
+        $("#answer4").text("");
+    };
 
 
     // an array to hold all possible questions
@@ -257,7 +263,7 @@ $(document).ready(function () {
                 score.incrementWrong();
             }
             score.updateScore();
-            goToState2DisplayQuestion();
+            goToState3DisplayAnswer(numOfCurrentQuestion);
         });
 
         // this is the timer
@@ -265,13 +271,14 @@ $(document).ready(function () {
             $("#answers li").off();
             score.incrementNotAnswered();
             score.updateScore();
-            goToState2DisplayQuestion();
+            goToState3DisplayAnswer(numOfCurrentQuestion);
         });
     }
 
     // State 3: Show the correct answer
-    function goToState3DisplayAnswer () {
-
+    function goToState3DisplayAnswer (currentQuestion) {
+        questionArray[currentQuestion].printCorrectAnswer();
+        fiveSecondTime.startInterval(goToState2DisplayQuestion);
     }
 
     // State 4: Display results
