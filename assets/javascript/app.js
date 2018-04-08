@@ -9,21 +9,27 @@ $(document).ready(function () {
         this.imgSrc = this.imgSrc.replace(/\s/g, ""); // strip spaces
         this.imgSrc = this.imgSrc.replace(/\./g, ""); // strip periods
         this.imgSrc = "assets/images/" + this.imgSrc + ".jpg";
+
+        this.qTextElement = $("#questionText");
+        this.pictureElement = $("#pictureHint");
+        this.ans1Element = $("#answer1");
+        this.ans2Element = $("#answer2");
+        this.ans3Element = $("#answer3");
+        this.ans4Element = $("#answer4");
     }
 
     Question.prototype.updateQuestionText = function () {
-        $("#question h4").text(this.questionText);
+        this.qTextElement.text(this.questionText);
     };
     Question.prototype.updateQuestionImage = function () {
-        $("#pictureHint").attr("src", this.imgSrc);
+        this.pictureElement.attr("src", this.imgSrc);
     };
     Question.prototype.updateAnswers = function () {
-
         shuffleArray(this.answers);
-        $("#answer1").text(this.answers[0]);
-        $("#answer2").text(this.answers[1]);
-        $("#answer3").text(this.answers[2]);
-        $("#answer4").text(this.answers[3]);
+        this.ans1Element.text(this.answers[0]);
+        this.ans2Element.text(this.answers[1]);
+        this.ans3Element.text(this.answers[2]);
+        this.ans4Element.text(this.answers[3]);
     };
     Question.prototype.print = function () {
         this.updateQuestionText();
@@ -36,12 +42,17 @@ $(document).ready(function () {
         }
         return false;
     }
-    Question.prototype.printCorrectAnswer = function () {
-        $("#question h4").text("Correct Answer:");
-        $("#answer1").text(this.correct);
-        $("#answer2").text("");
-        $("#answer3").text("");
-        $("#answer4").text("");
+    Question.prototype.printCorrectAnswer = function (gotAnswerCorrect) {
+        if (gotAnswerCorrect) {
+            this.qTextElement.text("You are correct!");
+        }
+        else {
+            this.qTextElement.text("Sorry, the correct answer is:");
+        }
+        this.ans1Element.text(this.correct);
+        this.ans2Element.text("");
+        this.ans3Element.text("");
+        this.ans4Element.text("");
     };
 
 
@@ -145,6 +156,8 @@ $(document).ready(function () {
     }
 
     function GameScore() {
+        this.numCorrectElement = $("#numCorrect");
+        this.totalQElement = $("#totalQuestions");
         this.reset();
     }
 
@@ -168,8 +181,8 @@ $(document).ready(function () {
         return this.numNotAnswered + this.numCorrect + this.numWrong;
     };
     GameScore.prototype.updateScore = function () {
-        $("#numCorrect").text(this.numCorrect);
-        $("#totalQuestions").text(this.numQuestions());
+        this.numCorrectElement.text(this.numCorrect);
+        this.totalQElement.text(this.numQuestions());
     };
 
     let score = new GameScore;
@@ -263,7 +276,7 @@ $(document).ready(function () {
                 score.incrementWrong();
             }
             score.updateScore();
-            goToState3DisplayAnswer(numOfCurrentQuestion);
+            goToState3DisplayAnswer(numOfCurrentQuestion, result);
         });
 
         // this is the timer
@@ -271,13 +284,13 @@ $(document).ready(function () {
             $("#answers li").off();
             score.incrementNotAnswered();
             score.updateScore();
-            goToState3DisplayAnswer(numOfCurrentQuestion);
+            goToState3DisplayAnswer(numOfCurrentQuestion, false);
         });
     }
 
     // State 3: Show the correct answer
-    function goToState3DisplayAnswer (currentQuestion) {
-        questionArray[currentQuestion].printCorrectAnswer();
+    function goToState3DisplayAnswer (currentQuestion, gotAnswerCorrect) {
+        questionArray[currentQuestion].printCorrectAnswer(gotAnswerCorrect);
         fiveSecondTime.startInterval(goToState2DisplayQuestion);
     }
 
