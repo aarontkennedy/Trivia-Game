@@ -1,36 +1,45 @@
 $(document).ready(function () {
 
+    // cache the jquery references to needed elements
+    // used by multiple objects and functions
+    qTextElement = $("#questionText");
+    pictureElement = $("#pictureHint");
+    ans1Element = $("#answer1");
+    ans2Element = $("#answer2");
+    ans3Element = $("#answer3");
+    ans4Element = $("#answer4");
+    numCorrectElement = $("#numCorrect");
+    totalQElement = $("#totalQuestions");
+    startButtonElement = $("#startButton");
+    wholeQuizElement = $("#theQuiz");
+    allTheAnswerElements = $("#answers li");
+
+
     // object to keep track of question information
     function Question(text, correctAnswer, ans2, ans3, ans4) {
         this.questionText = text;
         this.correct = correctAnswer;
         this.answers = [correctAnswer, ans2, ans3, ans4];
         this.imgSrc = correctAnswer;
+        // change wrestler name to match their image file
         this.imgSrc = this.imgSrc.replace(/\s/g, ""); // strip spaces
         this.imgSrc = this.imgSrc.replace(/\./g, ""); // strip periods
         this.imgSrc = "assets/images/" + this.imgSrc + ".jpg";
-
-        this.qTextElement = $("#questionText");
-        this.pictureElement = $("#pictureHint");
-        this.ans1Element = $("#answer1");
-        this.ans2Element = $("#answer2");
-        this.ans3Element = $("#answer3");
-        this.ans4Element = $("#answer4");
     }
-
     Question.prototype.updateQuestionText = function () {
-        this.qTextElement.text(this.questionText);
+        qTextElement.text(this.questionText);
     };
     Question.prototype.updateQuestionImage = function () {
-        this.pictureElement.attr("src", this.imgSrc);
+        pictureElement.attr("src", this.imgSrc);
     };
     Question.prototype.updateAnswers = function () {
         shuffleArray(this.answers);
-        this.ans1Element.text(this.answers[0]);
-        this.ans2Element.text(this.answers[1]);
-        this.ans3Element.text(this.answers[2]);
-        this.ans4Element.text(this.answers[3]);
+        ans1Element.text(this.answers[0]);
+        ans2Element.text(this.answers[1]);
+        ans3Element.text(this.answers[2]);
+        ans4Element.text(this.answers[3]);
     };
+    // print questions, image, and answers to the screen
     Question.prototype.print = function () {
         this.updateQuestionText();
         this.updateQuestionImage();
@@ -44,15 +53,15 @@ $(document).ready(function () {
     }
     Question.prototype.printCorrectAnswer = function (gotAnswerCorrect) {
         if (gotAnswerCorrect) {
-            this.qTextElement.text("You are correct!");
+            qTextElement.text("You are correct!");
         }
         else {
-            this.qTextElement.text("Sorry, the correct answer is:");
+            qTextElement.text("Sorry, the correct answer is:");
         }
-        this.ans1Element.text(this.correct);
-        this.ans2Element.text("");
-        this.ans3Element.text("");
-        this.ans4Element.text("");
+        ans1Element.text(this.correct);
+        ans2Element.text("");
+        ans3Element.text("");
+        ans4Element.text("");
     };
 
 
@@ -155,9 +164,9 @@ $(document).ready(function () {
         // you are already altering the original array
     }
 
+    // Object to keep track of the number of questions, corrects,
+    // incorrects, and unanswered.  Prints info to screen.
     function GameScore() {
-        this.numCorrectElement = $("#numCorrect");
-        this.totalQElement = $("#totalQuestions");
         this.reset();
     }
 
@@ -181,9 +190,29 @@ $(document).ready(function () {
         return this.numNotAnswered + this.numCorrect + this.numWrong;
     };
     GameScore.prototype.updateScore = function () {
-        this.numCorrectElement.text(this.numCorrect);
-        this.totalQElement.text(this.numQuestions());
+        numCorrectElement.text(this.numCorrect);
+        totalQElement.text(this.numQuestions());
     };
+    GameScore.prototype.printFinalResults = function () {
+        ans1Element.text("Correct: " + score.numCorrect);
+        ans2Element.text("Incorrect: " + score.numWrong);
+        ans3Element.text("Unanswered: " + score.numNotAnswered);
+        let percent = Math.floor(score.numCorrect * 100 / score.numQuestions());
+        ans4Element.text("Percent Correct: " + percent + "%");
+
+        if (percent > 90) {
+            pictureElement.attr("src", "assets/images/weSaluteYou.jpg");
+            qTextElement.text("Fantastic Job!");
+        }
+        else if (percent >= 70) {
+            pictureElement.attr("src", "assets/images/okayJob.jpg");
+            qTextElement.text("Slightly Above Average");
+        }
+        else {
+            pictureElement.attr("src", "assets/images/ewwTerrible.jpg");
+            qTextElement.text("You need to start watching the WWE Network.");
+        }
+    }
 
     let score = new GameScore;
 
@@ -235,8 +264,8 @@ $(document).ready(function () {
 
     // start button callback function
     function startButtonCallback() {
-        $("#startButton").hide().off();
-        $("#theQuiz").show();
+        startButtonElement.hide().off();
+        wholeQuizElement.show();
         score.reset().updateScore();
         shuffleArray(questionArray);  // shuffle the array of questions    
         goToState2DisplayQuestion();
@@ -245,11 +274,11 @@ $(document).ready(function () {
     // State 1: Wait for the user to click a button to start the game
     function state1StartGame() {
         // hide some of the stuff that is needed for showing 
-        $("#theQuiz").hide();
-        $("#startButton").show();
+        wholeQuizElement.hide();
+        startButtonElement.show();
 
         // wait for them to click the start button
-        $("#startButton").click(startButtonCallback);
+        startButtonElement.click(startButtonCallback);
     }
     state1StartGame();
 
@@ -265,9 +294,9 @@ $(document).ready(function () {
         questionArray[numOfCurrentQuestion].print();
 
         // listen to the answer list li's to see if they are clicked
-        $("#answers li").click(function (event) {
+        allTheAnswerElements.addClass("highlight").click(function (event) {
             tenSecondTime.stopInterval();
-            $("#answers li").off();
+            allTheAnswerElements.removeClass("highlight").off();
             console.log($(this).text());
             let result = questionArray[numOfCurrentQuestion].isAnswerCorrect($(this).text());
             if (result) {
@@ -282,7 +311,7 @@ $(document).ready(function () {
 
         // this is the timer
         tenSecondTime.startInterval(function () {
-            $("#answers li").off();
+            allTheAnswerElements.removeClass("highlight").off();
             score.incrementNotAnswered();
             score.updateScore();
             goToState3DisplayAnswer(numOfCurrentQuestion, false);
@@ -297,29 +326,12 @@ $(document).ready(function () {
 
     // State 4: Display results
     function goToState4EndGame() {
-        $("#answer1").text("Correct: " + score.numCorrect);
-        $("#answer2").text("Incorrect: " + score.numWrong);
-        $("#answer3").text("Unanswered: " + score.numNotAnswered);
-        let percent = Math.floor(score.numCorrect * 100 / score.numQuestions());
-        $("#answer4").text("Percent Correct: " + percent + "%");
+        score.printFinalResults();
 
-        if (percent > 90) {
-            $("#pictureHint").attr("src", "assets/images/weSaluteYou.jpg");
-            $("#question h4").text("Fantastic Job!");
-        }
-        else if (percent >= 70) {
-            $("#pictureHint").attr("src", "assets/images/okayJob.jpg");
-            $("#question h4").text("Slightly Above Average");
-        }
-        else {
-            $("#pictureHint").attr("src", "assets/images/ewwTerrible.jpg");
-            $("#question h4").text("You need to start watching the WWE Network.");
-        }
-
-        $("#startButton").text("Try Again!");
+        startButtonElement.text("Try Again!");
         // wait for them to click the start button
-        $("#startButton").click(startButtonCallback);
-        $("#startButton").show();
+        startButtonElement.click(startButtonCallback);
+        startButtonElement.show();
     }
 
 

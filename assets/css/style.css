@@ -44,7 +44,11 @@ padding:.25em;
 margin:.25em;
 } 
 
-#answers li:hover {
+.highlight {
+    cursor:pointer;
+}
+
+.highlight:hover {
     background-color: rgba(136, 255, 86, 0.975);
 }
 
