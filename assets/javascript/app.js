@@ -5,7 +5,6 @@ $(document).ready(function () {
         this.questionText = text;
         this.correct = correctAnswer;
         this.answers = [correctAnswer, ans2, ans3, ans4];
-        //debugger
         this.imgSrc = correctAnswer;
         this.imgSrc = this.imgSrc.replace(/\s/g, ""); // strip spaces
         this.imgSrc = this.imgSrc.replace(/\./g, ""); // strip periods
@@ -38,6 +37,7 @@ $(document).ready(function () {
         return false;
     }
     Question.prototype.printCorrectAnswer = function () {
+        $("#question h4").text("Correct Answer:");
         $("#answer1").text(this.correct);
         $("#answer2").text("");
         $("#answer3").text("");
