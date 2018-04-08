@@ -189,6 +189,7 @@ $(document).ready(function () {
 
 
     function GameTimer(seconds) {
+        this.secondsLeftElement = $("#secondsLeft");
         this.seconds = seconds;
         this.reset();
     }
@@ -199,20 +200,20 @@ $(document).ready(function () {
         return this;
     }
     GameTimer.prototype.print = function () {
-        $("#secondsLeft").text(this.currentLeft);
+        this.secondsLeftElement.text(this.currentLeft);
         return this;
     }
     GameTimer.prototype.decrement = function () {
         this.currentLeft--;
         return this;
     }
-    GameTimer.prototype.startInterval = function (callback) {
+    GameTimer.prototype.startInterval = function (callbackAfterTimeout) {
         this.reset();
         let self = this;
 
         this.timeout = setTimeout(function () {
             clearInterval(self.interval);
-            callback();
+            callbackAfterTimeout();
         }, this.seconds*1000 + 1100);
 
         this.interval = setInterval(function () {
