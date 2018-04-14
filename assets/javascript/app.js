@@ -2,17 +2,17 @@ $(document).ready(function () {
 
     // cache the jquery references to needed elements
     // used by multiple objects and functions
-    qTextElement = $("#questionText");
-    pictureElement = $("#pictureHint");
-    ans1Element = $("#answer1");
-    ans2Element = $("#answer2");
-    ans3Element = $("#answer3");
-    ans4Element = $("#answer4");
-    numCorrectElement = $("#numCorrect");
-    totalQElement = $("#totalQuestions");
-    startButtonElement = $("#startButton");
-    wholeQuizElement = $("#theQuiz");
-    allTheAnswerElements = $("#answers li");
+    let qTextElement = $("#questionText");
+    let pictureElement = $("#pictureHint");
+    let ans1Element = $("#answer1");
+    let ans2Element = $("#answer2");
+    let ans3Element = $("#answer3");
+    let ans4Element = $("#answer4");
+    let numCorrectElement = $("#numCorrect");
+    let totalQElement = $("#totalQuestions");
+    let startButtonElement = $("#startButton");
+    let wholeQuizElement = $("#theQuiz");
+    let allTheAnswerElements = $("#answers li");
 
 
     // object to keep track of question information
