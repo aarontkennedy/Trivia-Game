@@ -11,6 +11,7 @@ $(document).ready(function () {
     let numCorrectElement = $("#numCorrect");
     let totalQElement = $("#totalQuestions");
     let startButtonElement = $("#startButton");
+    let nextButtonElement = $("#nextButton");
     let wholeQuizElement = $("#theQuiz");
     let allTheAnswerElements = $("#answers li");
 
@@ -276,6 +277,8 @@ $(document).ready(function () {
         // hide some of the stuff that is needed for showing 
         wholeQuizElement.hide();
         startButtonElement.show();
+        nextButtonElement.hide();
+
 
         // wait for them to click the start button
         startButtonElement.click(startButtonCallback);
@@ -321,7 +324,21 @@ $(document).ready(function () {
     // State 3: Show the correct answer
     function goToState3DisplayAnswer (currentQuestion, gotAnswerCorrect) {
         questionArray[currentQuestion].printCorrectAnswer(gotAnswerCorrect);
-        fiveSecondTime.startInterval(goToState2DisplayQuestion);
+        nextButtonElement.show();
+
+        nextButtonElement.click(function () {
+            fiveSecondTime.stopInterval();
+            nextButtonElement.off();
+            nextButtonElement.hide();
+            goToState2DisplayQuestion();
+        });
+
+        fiveSecondTime.startInterval(function () {
+            nextButtonElement.off();
+            nextButtonElement.hide();
+            goToState2DisplayQuestion();
+        });
+
     }
 
     // State 4: Display results
