@@ -239,15 +239,13 @@ $(document).ready(function () {
     }
     GameTimer.prototype.startInterval = function (callbackAfterTimeout) {
         this.reset();
-        let self = this;
-
-        this.timeout = setTimeout(function () {
-            clearInterval(self.interval);
+        this.timeout = setTimeout(() => {
+            clearInterval(this.interval);
             callbackAfterTimeout();
         }, this.seconds*1000 + 1100);
 
-        this.interval = setInterval(function () {
-            self.print().decrement();
+        this.interval = setInterval(() => {
+            this.print().decrement();
         }, 1000);
     }
     GameTimer.prototype.stopInterval = function () {
